@@ -3,6 +3,7 @@ import threading
 import time
 
 global count
+#global do_run
 
 def b1():
     global flag
@@ -10,7 +11,9 @@ def b1():
     
 def job(w):
     global count
-    while True:
+    #global do_run
+
+    while getattr(t,"do_run",True):
         if flag==-1:
             segment(w,360,20,segnum[count%10])#0~9
             segment(w, 260,20,segnum[int(count/10)%6])#0~5
@@ -28,7 +31,12 @@ def segment(w,x,y,value):
     w.create_oval(x-10, y+ 70,   x,  y+125, fill=color[int(value[4])]) #e
     w.create_oval(x-10, y+  5,   x,  y+60 , fill=color[int(value[5])]) #f
     w.create_oval(x   , y+ 60, x+52, y+70 , fill=color[int(value[6])]) #g
-        
+
+def clear():
+    master.destroy()
+    t.do_run = False
+
+
 master = Tk()
 #        abcdefg
 segnum=['1111110','0110000','1101101','1111001','0110011','1011011','1011111','1110000','1111111','1110011']
@@ -43,6 +51,8 @@ mb=Frame(master)
 mb.pack(side="bottom")
 b = Button(mt,text='顯示按鈕',activebackground='purple',command=b1, width="30")
 b.pack()
+clear_bt = Button(mt,text='離開按鈕',activebackground='purple',command=clear, width="30")
+clear_bt.pack()
 
 segment(w,120,20,segnum[0])
 segment(w, 20,20,segnum[0])
